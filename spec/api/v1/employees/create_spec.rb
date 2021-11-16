@@ -26,4 +26,34 @@ RSpec.describe "employees#create", type: :request do
       }.to change { Employee.count }.by(1)
     end
   end
+
+  describe 'creating' do
+    let(:payload) do
+      {
+        data: {
+          type: 'employees',
+          attributes: {
+            first_name: 'Jane',
+            last_name: 'Doe',
+            age: 30
+          }
+        }
+      }
+
+      let(:instance) do
+        EmployeeResource.build(payload)
+      end
+
+      it 'works' do
+        expect {
+          expect(instance.save).to eq(true)
+        }.to change { Employee.count }.by(1)
+
+        employee = Employee.last
+        expect(employee.first_name).to eq('Jane')
+        expect(employee.last_name).to eq('Doe')
+        expect(employee.age).to eq(30)
+      end
+    end
+  end
 end
