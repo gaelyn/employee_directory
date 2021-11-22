@@ -2,11 +2,21 @@ require 'rails_helper'
 
 RSpec.describe PositionResource, type: :resource do
   describe 'creating' do
+    let!(:employee) { create(:employee) }
+
     let(:payload) do
       {
         data: {
           type: 'positions',
-          attributes: attributes_for(:position)
+          attributes: { },
+          relationships: {
+            employee: {
+              data: {
+                id: employee.id.to_s,
+                type: 'employees'
+              }
+            }
+          }
         }
       }
     end
@@ -17,7 +27,7 @@ RSpec.describe PositionResource, type: :resource do
 
     it 'works' do
       expect {
-        expect(instance.save).to eq(true), instance.errors.full_messages.to_sentence
+        expect(instance.save).to eq(true)
       }.to change { Position.count }.by(1)
     end
   end

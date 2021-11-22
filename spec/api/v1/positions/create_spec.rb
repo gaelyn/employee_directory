@@ -2,18 +2,25 @@ require 'rails_helper'
 
 RSpec.describe "positions#create", type: :request do
   subject(:make_request) do
-    jsonapi_post "y/positions", payload
+    jsonapi_post "/api/v1/positions", payload
   end
 
   describe 'basic create' do
-    let(:params) do
-      attributes_for(:position)
-    end
+    let!(:employee) { create(:employee) }
+
     let(:payload) do
       {
         data: {
           type: 'positions',
-          attributes: params
+          attributes: { },
+          relationships: {
+            employee: {
+              data: {
+                id: employee.id.to_s,
+                type: 'employees'
+              }
+            }
+          }
         }
       }
     end
